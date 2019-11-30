@@ -1,0 +1,137 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Ajax Lab (Practise Task-01)</title>
+    <script src="~/scripts/jquery-3.4.1.js"></script>
+    <link href="~/stylesheet/bootstrap.css" rel="stylesheet" />
+    <script>
+
+        $(document).ready(function () {
+            
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/GetAllStudents",
+                    success: function (result) {
+
+                        for (r in result) {
+                            console.log(r);
+                            $("#stdList").append("<tr><td>" +
+                                result[r].StudentName + "</td><td>" + result[r].StudentRegNo + "</td><td>" + result[r].StudentCGPA + "</td></tr>");
+                        }
+                    },
+                    failure: function (result) {
+                        alert("failure");
+                    },
+                    error: function (result) {
+                        alert("some error occured :)");
+                    }
+                });
+          
+            var modal = document.getElementById("myModal");
+            var cbtn = document.getElementsByClassName("close")[0];
+            var cbtn1 = document.getElementsByClassName("clsbtn")[0];
+            $("#myBtn").click(function () {
+                modal.style.display = "block";
+            })
+            cbtn.onclick = function () {
+                modal.style.display = "none";
+            }
+            cbtn1.onclick = function () {
+                modal.style.display = "none";
+            }
+           });
+    </script>
+</head>
+<body>
+    <div class="jumbotron">
+        <h1 style="margin-left: 400px;">JSON AND Ajax </h1>
+        <h5 style="color:cornflowerblue; margin-left: 490px;">User456 (Bse12345)</h5>
+    </div>
+    <div class="container">
+        <button style="margin-bottom:8px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="myBtn">Add New Student</button>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td> <strong>Student Name</strong></td>
+                    <td> <strong>Student RegNo</strong></td>
+                    <td> <strong>Student CGPA</strong></td>
+                </tr>
+            </thead>
+            <tbody id="stdList"></tbody>
+        </table>
+        <div id="myModal" class="modal">
+            <div class="modal-dialog">
+                <div class="modal-content" style="margin-top: 150px;width: 714px;height: 436px; margin-left:-95px;">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add New Student</h4>
+                        <button type="button" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="stdName">Student Name</label>
+                                <input type="text" class="form-control" id="STDName" placeholder="enter student name" />
+                            </div>
+                            <div class="form-group">
+                                <label for="stdRegNo">Student RegNo</label>
+                                <input type="text" class="form-control" id="STDRegNo" placeholder="enter student regno" />
+                            </div>
+                            <div class="form-group">
+                                <label for="stdCGPA">Student CGPA</label>
+                                <input type="text" class="form-control" id="STDCGPA" placeholder="enter student cgpa" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btnAdd1">Add Student</button>
+                        <button type="button" class="btn btn-light clsbtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+
+    $(document).ready(function () {
+        var s = document.getElementById("btnAdd1");
+        s.onclick = function () {
+
+            var stdObj = {
+                StudentName: $("#STDName").val(),
+                StudentRegNo: $("#STDRegNo").val(),
+                StudentCGPA: $("#STDCGPA").val()
+            };
+            $.ajax({
+                type: "POST",
+                url: "/Home/Add",
+                data: JSON.stringify(stdObj),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $("#stdList").prepend("<tr><td>" +
+                        result[0].StudentName + "</td><td>" + result[0].StudentRegNo + "</td><td>" + result[0].StudentCGPA + "</td></tr>");
+                    $("#myModal").hide();
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                },
+                failure: function () {
+                    alert("failed");
+                }
+            });
+
+        }
+    });
+
+
+
+</script>
